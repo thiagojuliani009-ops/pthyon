@@ -4,10 +4,10 @@ from fastapi import FastAPI
 app = FastAPI()
 
 fake_db = [
-    {"title": f"Criando uma aplicação com Django", "data": datetime.now(UTC)"published": True},
-    {"title": f"Criando uma aplicação com FastAPI", "data": datetime.now(UTC)"published": True},
-    {"title": f"Criando uma aplicação com Flask", "data": datetime.now(UTC)"published": True},
-    {"title": f"Criando uma aplicação com starlett", "data": datetime.now(UTC)"published": True},
+    {"title": f"Criando uma aplicação com Django", "data": datetime.now(UTC), "published": True},
+    {"title": f"Criando uma aplicação com FastAPI", "data": datetime.now(UTC), "published": True},
+    {"title": f"Criando uma aplicação com Flask", "data": datetime.now(UTC), "published": True},
+    {"title": f"Criando uma aplicação com starlett", "data": datetime.now(UTC), "published": True},
 ]
 
 @app.get("/posts")
