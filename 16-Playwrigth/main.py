@@ -7,5 +7,4 @@ with sync_playwright() as p:
     print(page.title())
     browser.close()
 
-    print("olá, Mundo")
 
