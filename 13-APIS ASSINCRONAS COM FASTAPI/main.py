@@ -1,5 +1,7 @@
 from datetime import UTC, datetime
-from fastapi import FastAPI, status
+from typing import Annotated
+
+from fastapi import Cookie, FastAPI, status
 from pydantic import BaseModel
 
 app = FastAPI()
@@ -24,9 +26,15 @@ def  create_post(post: Post):
     
 
 @app.get("/posts/")
-def read_posts(published: bool, limit: int, skip: int = 0):  
-    return [ post for post in fake_db [skip: skip + limit] if post["published"] is published]
- 
+def read_posts(published: bool, limit: int, skip: int = 0, ads_id: Annotated[str | None, Cookie()] = None):
+    # Filter the list first
+    filtered_posts = [post for post in fake_db if post["published"] is published]
+
+    # O print precisa estar aqui dentro (com recuo/identação)
+    print(f"cookie: {ads_id}")
+
+    # Then apply the slice for pagination
+    return filtered_posts[skip : skip + limit]
 
 @app.get("/posts/{framework}")
 def read_framework_posts(framework: str): 
