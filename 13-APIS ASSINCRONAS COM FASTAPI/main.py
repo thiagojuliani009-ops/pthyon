@@ -16,14 +16,17 @@ class Post (BaseModel):
     date: datetime = datetime.now(UTC)
     published: bool = False
 
+
 @app.post("/posts/", status_code=status.HTTP_201_CREATED)
 def  create_post(post: Post):
+    fake_db.append(post.model_dump())
     return post
     
 
 @app.get("/posts/")
-def read_posts(skip: int = 0, limit = len (fake_db), published: bool = True):   
-    return [ post for post in fake_db[skip: skip + limit] if post["published"] is published]
+def read_posts(published: bool, limit: int, skip: int = 0):  
+    return [ post for post in fake_db [skip: skip + limit] if post["published"] is published]
+ 
 
 @app.get("/posts/{framework}")
 def read_framework_posts(framework: str): 
