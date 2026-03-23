@@ -1,12 +1,8 @@
+
 from fastapi import FastAPI
 
+from controllers import post
+
 app = FastAPI()
-
-@app.get("/")
-def read_root():
-    return {"message": "Hello World", "status": "Rodando!"}
-
-@app.get("/foobar")
-def foobar():
-    return {"foo": "bar", "hello": "world"}
+app.include_router(post.router)
 
