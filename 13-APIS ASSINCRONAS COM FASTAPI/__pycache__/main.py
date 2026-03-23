@@ -20,6 +20,18 @@ class Post(BaseModel):
     date: datetime = datetime.now(UTC)
     published: bool = False
 
+# 1. Certifique-se que a classe Foo herda de BaseModel
+class Foo(BaseModel):
+    bar: str
+
+@app.get("/foobar")
+def foobar():
+    # 2. Retorne uma instância da classe
+    return Foo(bar="Conteúdo do bar")
+{
+  "bar": "Conteúdo do bar"
+}
+
 # Rota para criar posts
 @app.post("/posts/", status_code=status.HTTP_201_CREATED)
 def create_post(post: Post):
