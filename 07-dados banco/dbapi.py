@@ -1,11 +1,12 @@
-import sqlite3
 from pathlib import Path
+import sqlite3
 
 ROOT_PATH = Path(__file__).parent
 
-conexao = sqlite3.connect (ROOT_PATH / "meu_banco.sqlite")
+conexao = sqlite3.connect(ROOT_PATH / "meu_banco.sqlite")
+conexao.row_factory = sqlite3.Row
+
 cursor = conexao.cursor()
-cursor.row_factory = sqlite3.Row
 
 def criar_tabela(conexao, cursor): 
   cursor.execute(
