@@ -8,10 +8,10 @@ cursor = conexao.cursor()
 cursor.row_factory = sqlite3.Row
 
 def criar_tabela(conexao, cursor): 
-   cursor.execute(
-      "CREATE TABLE clientes(id INTEGER PRIMARY KEY AUTOINCREMENT, nome VARCHAR(100), email VARCHAR(150))"
-    )
-   conexao.commit()
+  cursor.execute(
+    "CREATE TABLE clientes(id INTEGER PRIMARY KEY AUTOINCREMENT, nome VARCHAR(100), email VARCHAR(150))"
+   )
+  conexao.commit()
 
 def inserir_registro(conexao, cursor, nome, email):
  data = (nome, email)
