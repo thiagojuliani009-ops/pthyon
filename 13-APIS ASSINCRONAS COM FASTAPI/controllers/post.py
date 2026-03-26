@@ -52,3 +52,15 @@ def read_framework_posts(framework: str):
             {"title": f"Internacionalizando uma app {framework}", "data": datetime.now(UTC)}
         ]
     }
+from fastapi import APIRouter
+from schemas.post import PostIn # O nome aqui deve ser igual ao do arquivo acima
+from models.post import posts
+from main import database
+
+router = APIRouter()
+
+@router.post("/posts/", response_model=PostIn)
+async def create_post(post: PostIn):
+    query = posts.insert().values(title=post.title, content=post.content, published=post.published)
+    last_record_id = await database.execute(query)
+    return {**post.dict(), "id": last_record_id}
