@@ -44,7 +44,7 @@ def read_posts(
 
 
 
-@router.get("/{framework}", respone_model=PostOut)
+@router.get("/{framework}", response_model=PostOut)
 def read_framework_posts(framework: str): 
     return {
         "posts": [
