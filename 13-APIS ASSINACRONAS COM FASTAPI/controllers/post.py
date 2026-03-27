@@ -37,7 +37,7 @@ def read_posts(
     tail = skip = limit
     return [post for post in fake_db[skip : tail] if post["published"] is published ]
 
-@router.get("/{framework}", reponse_model=PostOut)
+@router.get("/{framework}", response_model=PostOut)
 def read_root(framework: str):
     return {
         "posts": [
