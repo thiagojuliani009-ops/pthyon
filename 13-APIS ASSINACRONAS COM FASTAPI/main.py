@@ -7,10 +7,10 @@ from controllers import post
 
 
 
-DATABASE_URL= "sqlite: ///./blog.db"
+DATABASE_URL = "sqlite:///./blog.db"
 
 database = databases.Database(DATABASE_URL)
-metadata = sa.metadata()
+metadata = sa.MetaData()
 engine = sa.create_engine(DATABASE_URL, connect_args={"check_same_thread":False})
 metadata.create_all(engine)
 
@@ -21,7 +21,9 @@ async def lifespan(app: FastAPI):
     await database.disconnect()
 
 app = FastAPI(lifespan=lifespan)
-app.include_routerr(post.router)
+app.include_router(post.router)
+
+
 
 
 
