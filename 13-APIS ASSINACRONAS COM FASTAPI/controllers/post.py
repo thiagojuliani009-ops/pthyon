@@ -3,7 +3,7 @@ from typing import Annotated
 from fastapi import APIRouter, status, Cookie, Header, Response
 from shermas.post import PostIn 
 from views.post import PostOut
-from main import app
+
 
 router = APIRouter(prefix="/post")
 
@@ -34,7 +34,7 @@ def read_posts(
     response.set_cookie(key="user", value="thiagojuliani@gmail.com")
     print(f"Cookie: {ads_id}")
     print(f"user-agent: {user_agent}")
-    tail = skip = skip
+    tail = skip = limit
     return [post for post in fake_db[skip : tail] if post["published"] is published ]
 
 @router.get("/{framework}", reponse_model=PostOut)
@@ -45,3 +45,4 @@ def read_root(framework: str):
             {"title":f"Internacional uma app {framework}", "date": datetime.now(UTC)},
         ]
     }
+
