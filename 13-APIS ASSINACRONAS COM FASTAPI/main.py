@@ -18,6 +18,14 @@ class Post(BaseModel):
     date: datetime = datetime.now(UTC)
     published: bool = False
 
+class Foo(BaseModel):
+    bar: str
+    
+
+@app.get("/foobar/", response_model=Foo) 
+def foobar() ->dict[str, str]: 
+    return {'bar': 'foo', 'message': 'hello world'}
+
 @app.post("/posts/", status_code=status.HTTP_201_CREATED)
 def create_post(post: Post):
     fake_db.append(post.model_dump())
