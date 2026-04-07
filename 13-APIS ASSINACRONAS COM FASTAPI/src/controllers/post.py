@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends, status
 
-from schemas.post import PostIn, PostUpdateIn
-from security import login_required
-from services.post import PostService
-from views.post import PostOut
+from .schemas.post import PostIn, PostUpdateIn
+from .security import login_required
+from .services.post import PostService
+from .views.post import PostOut
 
 
 router = APIRouter(prefix="/post", dependencies=[Depends(login_required)])

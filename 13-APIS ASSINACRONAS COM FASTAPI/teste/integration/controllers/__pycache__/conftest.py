@@ -10,8 +10,8 @@ settings.database_url = "sqlite:///tests.db"
 
 @pytest_asyncio.fixture
 async def db(request):
-    from src.controllers.database import database, engine, metadata  # noqa
-    from src.controllers.models.post import posts  # noqa
+    from src.database import database, engine, metadata  # noqa
+    from src.models.post import posts  # noqa
 
     await database.connect()
     metadata.create_all(engine)
@@ -28,7 +28,7 @@ async def db(request):
 
 @pytest_asyncio.fixture
 async def client(db):
-    from src.controllers.main import app
+    from src.main import app
 
     transport = ASGITransport(app=app)
     headers = {
