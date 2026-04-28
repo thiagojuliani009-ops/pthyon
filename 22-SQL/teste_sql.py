@@ -1,18 +1,21 @@
-import  sqlite3
+import sqlite3
+
 conexao = sqlite3.connect('banco.db')
 cursor = conexao.cursor()
+
+# Criar tabela
 cursor.execute('''CREATE TABLE IF NOT EXISTS clientes (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id INTEGER PRIMARY KEY,
     nome TEXT NOT NULL,
     email TEXT UNIQUE NOT NULL
 )''')
-conexao.commit()
 
-cursor.execute('''INSERT INTO clientes (nome, email) VALUES (?, ?)''', ('João Silva', 'joao.silva@example.com'))
+# Inserir dados
+cursor.execute('''INSERT INTO clientes (id, nome, email) 
+                  VALUES (001, 'Thiago', 'thiagojuli@senac')''')
+
 conexao.commit()
-print('Cliente inserido com sucesso!')
-cursor.execute('SELECT * FROM clientes')
-clientes = cursor.fetchall()
-for cliente in clientes:
-    print(cliente)
+print("Dados inseridos com sucesso!")
+
 conexao.close()
+
