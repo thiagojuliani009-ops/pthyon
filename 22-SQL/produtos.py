@@ -1,30 +1,29 @@
 import sqlite3
 import json
 
-
 conexao = sqlite3.connect('novo_banco.db')
 cursor = conexao.cursor()
 
-cursor.execute('''CREATE TABLE IF NOT EXISTS produtos ( 
+cursor.execute('''CREATE TABLE IF NOT EXISTS produtos (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    Nome Produto TEXT NOT NULL,
-    Categoria TEXT NOT NULL,
-    Marca TEXT NOT NULL,
-    Preco Custo REAL NOT NULL,
-    Preco Venda REAL NOT NULL,
-        
+    nome_produto TEXT NOT NULL,
+    categoria TEXT NOT NULL,
+    marca TEXT NOT NULL,
+    preco_custo REAL NOT NULL,
+    preco_venda REAL NOT NULL
 )''')
 
 def salvar_json():
     """Salva todos os produtos do banco em JSON"""
-    cursor.execute('SELECT Nome Produto, Categoria, Marca, Preco Custo, Preco Venda FROM produtos')
+    cursor.execute('SELECT nome_produto, categoria, marca, preco_custo, preco_venda FROM produtos')
     produtos = cursor.fetchall()
     produtos_lista = [
-        {'Nome Produto': p[0], 'Categoria': p[1], 'Marca': p[2], 'Preco Custo': p[3], 'Preco Venda': p[4]} 
+        {'nome_produto': p[0], 'categoria': p[1], 'marca': p[2], 'preco_custo': p[3], 'preco_venda': p[4]}
         for p in produtos
     ]
     with open('produtos.json', 'w', encoding='utf-8') as f:
         json.dump(produtos_lista, f, indent=4, ensure_ascii=False)
+
 
 def adicionar_produto():
     """Adiciona um novo produto"""
@@ -36,15 +35,17 @@ def adicionar_produto():
     preco_venda = float(input("Digite o preço de venda: "))
     
     try:
-        cursor.execute('''INSERT INTO produtos (Nome Produto, Categoria, Marca, Preco Custo, Preco Venda)
+        cursor.execute('''INSERT INTO produtos (nome_produto, categoria, marca, preco_custo, preco_venda)
                           VALUES (?, ?, ?, ?, ?)''', (nome_produto, categoria, marca, preco_custo, preco_venda))
         conexao.commit()
         print(f"✓ Produto {nome_produto} inserido com sucesso!")
     except sqlite3.IntegrityError as e:
         print(f"✗ Erro: {e}")
+
+
 def listar_produtos():
     """Lista todos os produtos"""
-    cursor.execute('SELECT id, Nome Produto, Categoria, Marca, Preco Custo, Preco Venda FROM produtos')
+    cursor.execute('SELECT id, nome_produto, categoria, marca, preco_custo, preco_venda FROM produtos')
     produtos = cursor.fetchall()
     if not produtos:
         print("\nNenhum produto cadastrado.")
@@ -52,23 +53,27 @@ def listar_produtos():
     print("\n=== Lista de Produtos ===")
     for p in produtos:
         print(f"ID: {p[0]} | Nome Produto: {p[1]} | Categoria: {p[2]} | Marca: {p[3]} | Preço Custo: {p[4]} | Preço Venda: {p[5]}")
+
+
 def excluir_produto():
     """Exclui um produto pelo nome"""
     print("\n=== Excluir Produto ===")
     nome_produto = input("Digite o nome do produto a excluir: ")
     
-    cursor.execute('DELETE FROM produtos WHERE Nome Produto = ?', (nome_produto,))
+    cursor.execute('DELETE FROM produtos WHERE nome_produto = ?', (nome_produto,))
     if cursor.rowcount > 0:
         conexao.commit()
         print(f"✓ Produto {nome_produto} excluído com sucesso!")
     else:
         print(f"✗ Produto {nome_produto} não encontrado.")
+
+
 def atualizar_produto():
     """Atualiza dados de um produto existente"""
     print("\n=== Atualizar Produto ===")
     nome_produto = input("Digite o nome do produto a atualizar: ")
     
-    cursor.execute('SELECT id FROM produtos WHERE Nome Produto = ?', (nome_produto,))
+    cursor.execute('SELECT id FROM produtos WHERE nome_produto = ?', (nome_produto,))
     resultado = cursor.fetchone()
     if resultado:
         id_produto = resultado[0]
@@ -78,12 +83,13 @@ def atualizar_produto():
         novo_preco_venda = float(input("Digite o novo preço de venda: "))
         
         cursor.execute('''UPDATE produtos 
-                          SET Categoria = ?, Marca = ?, Preco Custo = ?, Preco Venda = ? 
+                          SET categoria = ?, marca = ?, preco_custo = ?, preco_venda = ? 
                           WHERE id = ?''', (nova_categoria, nova_marca, novo_preco_custo, novo_preco_venda, id_produto))
         conexao.commit()
         print(f"✓ Produto {nome_produto} atualizado com sucesso!")
     else:
         print(f"✗ Produto {nome_produto} não encontrado.")
+
 
 # Salvar JSON antes de sair
 salvar_json()
