@@ -73,25 +73,82 @@ def atualizar_produto():
     print("\n=== Atualizar Produto ===")
     nome_produto = input("Digite o nome do produto a atualizar: ")
     
-    cursor.execute('SELECT id FROM produtos WHERE nome_produto = ?', (nome_produto,))
-    resultado = cursor.fetchone()
-    if resultado:
-        id_produto = resultado[0]
-        nova_categoria = input("Digite a nova categoria: ")
-        nova_marca = input("Digite a nova marca: ")
-        novo_preco_custo = float(input("Digite o novo preço de custo: "))
-        novo_preco_venda = float(input("Digite o novo preço de venda: "))
-        
-        cursor.execute('''UPDATE produtos 
-                          SET categoria = ?, marca = ?, preco_custo = ?, preco_venda = ? 
-                          WHERE id = ?''', (nova_categoria, nova_marca, novo_preco_custo, novo_preco_venda, id_produto))
-        conexao.commit()
-        print(f"✓ Produto {nome_produto} atualizado com sucesso!")
-    else:
+    cursor.execute('SELECT id, nome_produto, categoria, marca, preco_custo, preco_venda FROM produtos WHERE nome_produto = ?', (nome_produto,))
+    produto = cursor.fetchone()
+    
+    if not produto:
         print(f"✗ Produto {nome_produto} não encontrado.")
+        return
+    
+    print(f"\nDados atuais:")
+    print(f"  Nome Produto: {produto[1]}")
+    print(f"  Categoria: {produto[2]}")
+    print(f"  Marca: {produto[3]}")
+    print(f"  Preço Custo: {produto[4]}")
+    print(f"  Preço Venda: {produto[5]}")
+    
+    print("\nO que deseja atualizar?")
+    print("1. Categoria")
+    print("2. Marca")
+    print("3. Preço Custo")
+    print("4. Preço Venda")
+    
+    opcao = input("\nEscolha (1-4): ")
+    
+    try:
+        if opcao == '1':
+            nova_categoria = input("Nova categoria: ")
+            cursor.execute('UPDATE produtos SET categoria = ? WHERE nome_produto = ?', (nova_categoria, nome_produto))
+        elif opcao == '2':
+            nova_marca = input("Nova marca: ")
+            cursor.execute('UPDATE produtos SET marca = ? WHERE nome_produto = ?', (nova_marca, nome_produto))
+        elif opcao == '3':
+            novo_preco_custo = float(input("Novo preço de custo: "))
+            cursor.execute('UPDATE produtos SET preco_custo = ? WHERE nome_produto = ?', (novo_preco_custo, nome_produto))
+        elif opcao == '4':
+            novo_preco_venda = float(input("Novo preço de venda: "))
+            cursor.execute('UPDATE produtos SET preco_venda = ? WHERE nome_produto = ?', (novo_preco_venda, nome_produto))
+        else:
+            print("Opção inválida!")
+            return
+        
+        conexao.commit()
+        print("✓ Produto atualizado com sucesso!")
+        
+    except sqlite3.IntegrityError as e:
+        print(f"✗ Erro: {e}")
 
+
+# Menu principal
+while True:
+    print("\n=== MENU PRODUTOS ===")
+    print("1. Adicionar produto")
+    print("2. Listar produtos")
+    print("3. Excluir produto")
+    print("4. Atualizar produto")
+    print("5. Sair")
+    
+    opcao = input("\nEscolha uma opção (1-5): ")
+    
+    if opcao == '1':
+        adicionar_produto()
+    elif opcao == '2':
+        listar_produtos()
+    elif opcao == '3':
+        excluir_produto()
+    elif opcao == '4':
+        atualizar_produto()
+    elif opcao == '5':
+        break
+    else:
+        print("Opção inválida!")
 
 # Salvar JSON antes de sair
 salvar_json()
-conexao.commit()
+
+cursor.execute('SELECT COUNT(*) FROM produtos')
+total = cursor.fetchone()[0]
+print(f"\n✓ Total de produtos: {total}")
+print("✓ Dados salvos em produtos.json")
+
 conexao.close()

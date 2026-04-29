@@ -1,1 +1,9 @@
-[]
+[
+    {
+        "nome_produto": "notebook",
+        "categoria": "5",
+        "marca": "5",
+        "preco_custo": 5.0,
+        "preco_venda": 5.0
+    }
+]

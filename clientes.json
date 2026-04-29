@@ -1,7 +1,7 @@
 [
     {
         "nome": "Thiago Oliveira",
-        "email": "thiago10@gmail.com",
+        "email": "thiago.oliveira@novoemail.com",
         "cidade": "Pelotas RS",
         "cpf": "111.222.33"
     },
@@ -10,5 +10,11 @@
         "email": "Voliveira@mail.com.br",
         "cidade": "São Paulo SP",
         "cpf": "444.555.666.77"
+    },
+    {
+        "nome": "jose silva",
+        "email": "jsilva@hotmail.com.br",
+        "cidade": "Rio de Janerio RJ",
+        "cpf": "455.666.885.566.5588"
     }
 ]

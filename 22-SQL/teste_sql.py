@@ -13,12 +13,27 @@ cursor.execute('''CREATE TABLE IF NOT EXISTS clientes (
     cpf TEXT UNIQUE NOT NULL
 )''')
 
+def validar_cpf(cpf):
+    """Valida se o CPF tem exatamente 11 dígitos (ignorando pontos e traços)"""
+    # Remove pontos e traços
+    cpf_limpo = cpf.replace('.', '').replace('-', '')
+
+    # Verifica se tem exatamente 11 dígitos
+    if len(cpf_limpo) != 11:
+        return False
+
+    # Verifica se todos são dígitos
+    if not cpf_limpo.isdigit():
+        return False
+
+    return True
+
 def salvar_json():
     """Salva todos os clientes do banco em JSON"""
     cursor.execute('SELECT nome, email, cidade, cpf FROM clientes')
     clientes = cursor.fetchall()
     clientes_lista = [
-        {'nome': c[0], 'email': c[1], 'cidade': c[2], 'cpf': c[3]} 
+        {'nome': c[0], 'email': c[1], 'cidade': c[2], 'cpf': c[3]}
         for c in clientes
     ]
     with open('clientes.json', 'w', encoding='utf-8') as f:
@@ -30,8 +45,14 @@ def adicionar_cliente():
     nome = input("Digite o nome: ")
     email = input("Digite o email: ")
     cidade = input("Digite a cidade: ")
-    cpf = input("Digite o CPF (formato XXX.XXX.XXX-XX): ")
-    
+
+    while True:
+        cpf = input("Digite o CPF (exatamente 11 dígitos, formato XXX.XXX.XXX-XX): ")
+        if validar_cpf(cpf):
+            break
+        else:
+            print("✗ CPF inválido! Deve ter exatamente 11 dígitos.")
+
     try:
         cursor.execute('''INSERT INTO clientes (nome, email, cidade, cpf)
                           VALUES (?, ?, ?, ?)''', (nome, email, cidade, cpf))
@@ -55,7 +76,7 @@ def excluir_cliente():
     """Exclui um cliente pelo nome"""
     print("\n=== Excluir Cliente ===")
     nome = input("Digite o nome do cliente a excluir: ")
-    
+
     cursor.execute('DELETE FROM clientes WHERE nome = ?', (nome,))
     if cursor.rowcount > 0:
         conexao.commit()
@@ -67,29 +88,28 @@ def atualizar_cliente():
     """Atualiza dados de um cliente existente"""
     print("\n=== Atualizar Cliente ===")
     nome = input("Digite o nome do cliente a atualizar: ")
-    
+
     cursor.execute('SELECT nome, email, cidade, cpf FROM clientes WHERE nome = ?', (nome,))
     cliente = cursor.fetchone()
-    
+
     if not cliente:
         print(f"✗ Cliente {nome} não encontrado.")
         return
-    
+
     print(f"\nDados atuais:")
     print(f"  Nome: {cliente[0]}")
     print(f"  Email: {cliente[1]}")
     print(f"  Cidade: {cliente[2]}")
     print(f"  CPF: {cliente[3]}")
-    
+
     print("\nO que deseja atualizar?")
     print("1. Nome")
     print("2. Email")
     print("3. Cidade")
     print("4. CPF")
-    print("5. Todos os dados")
-    
-    opcao = input("\nEscolha (1-5): ")
-    
+
+    opcao = input("\nEscolha (1-4): ")
+
     try:
         if opcao == '1':
             novo_nome = input("Novo nome: ")
@@ -101,22 +121,20 @@ def atualizar_cliente():
             nova_cidade = input("Nova cidade: ")
             cursor.execute('UPDATE clientes SET cidade = ? WHERE nome = ?', (nova_cidade, nome))
         elif opcao == '4':
-            novo_cpf = input("Novo CPF: ")
-            cursor.execute('UPDATE clientes SET cpf = ? WHERE nome = ?', (novo_cpf, nome))
-        elif opcao == '5':
-            novo_nome = input("Novo nome: ")
-            novo_email = input("Novo email: ")
-            nova_cidade = input("Nova cidade: ")
-            novo_cpf = input("Novo CPF: ")
-            cursor.execute('''UPDATE clientes SET nome = ?, email = ?, cidade = ?, cpf = ? 
-                             WHERE nome = ?''', (novo_nome, novo_email, nova_cidade, novo_cpf, nome))
+            while True:
+                novo_cpf = input("Novo CPF (exatamente 11 dígitos): ")
+                if validar_cpf(novo_cpf):
+                    cursor.execute('UPDATE clientes SET cpf = ? WHERE nome = ?', (novo_cpf, nome))
+                    break
+                else:
+                    print("✗ CPF inválido! Deve ter exatamente 11 dígitos.")
         else:
             print("Opção inválida!")
             return
-        
+
         conexao.commit()
         print("✓ Cliente atualizado com sucesso!")
-        
+
     except sqlite3.IntegrityError as e:
         print(f"✗ Erro: {e}")
 
@@ -128,9 +146,9 @@ while True:
     print("3. Excluir cliente")
     print("4. Atualizar cliente")
     print("5. Sair")
-    
+
     opcao = input("\nEscolha uma opção (1-5): ")
-    
+
     if opcao == '1':
         adicionar_cliente()
     elif opcao == '2':
@@ -150,7 +168,6 @@ salvar_json()
 cursor.execute('SELECT COUNT(*) FROM clientes')
 total = cursor.fetchone()[0]
 print(f"\n✓ Total de clientes: {total}")
-print("✓ Dados salvos em clientes.json")
+print("✓ Dados salvos no banco e em clientes.json")
 
 conexao.close()
-
