@@ -1,8 +1,14 @@
 [
     {
-        "nome": "Bruna Almeida ",
-        "email": "bruna9876@senac.com.br",
-        "cidade": "Pelotas",
-        "cpf": "555.666.777.88"
+        "nome": "Thiago Oliveira",
+        "email": "thiago10@gmail.com",
+        "cidade": "Pelotas RS",
+        "cpf": "111.222.33"
+    },
+    {
+        "nome": "Vilson Oliveira",
+        "email": "Voliveira@mail.com.br",
+        "cidade": "São Paulo SP",
+        "cpf": "444.555.666.77"
     }
 ]

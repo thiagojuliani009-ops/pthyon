@@ -63,15 +63,73 @@ def excluir_cliente():
     else:
         print(f"✗ Cliente {nome} não encontrado.")
 
+def atualizar_cliente():
+    """Atualiza dados de um cliente existente"""
+    print("\n=== Atualizar Cliente ===")
+    nome = input("Digite o nome do cliente a atualizar: ")
+    
+    cursor.execute('SELECT nome, email, cidade, cpf FROM clientes WHERE nome = ?', (nome,))
+    cliente = cursor.fetchone()
+    
+    if not cliente:
+        print(f"✗ Cliente {nome} não encontrado.")
+        return
+    
+    print(f"\nDados atuais:")
+    print(f"  Nome: {cliente[0]}")
+    print(f"  Email: {cliente[1]}")
+    print(f"  Cidade: {cliente[2]}")
+    print(f"  CPF: {cliente[3]}")
+    
+    print("\nO que deseja atualizar?")
+    print("1. Nome")
+    print("2. Email")
+    print("3. Cidade")
+    print("4. CPF")
+    print("5. Todos os dados")
+    
+    opcao = input("\nEscolha (1-5): ")
+    
+    try:
+        if opcao == '1':
+            novo_nome = input("Novo nome: ")
+            cursor.execute('UPDATE clientes SET nome = ? WHERE nome = ?', (novo_nome, nome))
+        elif opcao == '2':
+            novo_email = input("Novo email: ")
+            cursor.execute('UPDATE clientes SET email = ? WHERE nome = ?', (novo_email, nome))
+        elif opcao == '3':
+            nova_cidade = input("Nova cidade: ")
+            cursor.execute('UPDATE clientes SET cidade = ? WHERE nome = ?', (nova_cidade, nome))
+        elif opcao == '4':
+            novo_cpf = input("Novo CPF: ")
+            cursor.execute('UPDATE clientes SET cpf = ? WHERE nome = ?', (novo_cpf, nome))
+        elif opcao == '5':
+            novo_nome = input("Novo nome: ")
+            novo_email = input("Novo email: ")
+            nova_cidade = input("Nova cidade: ")
+            novo_cpf = input("Novo CPF: ")
+            cursor.execute('''UPDATE clientes SET nome = ?, email = ?, cidade = ?, cpf = ? 
+                             WHERE nome = ?''', (novo_nome, novo_email, nova_cidade, novo_cpf, nome))
+        else:
+            print("Opção inválida!")
+            return
+        
+        conexao.commit()
+        print("✓ Cliente atualizado com sucesso!")
+        
+    except sqlite3.IntegrityError as e:
+        print(f"✗ Erro: {e}")
+
 # Menu principal
 while True:
     print("\n=== MENU ===")
     print("1. Adicionar cliente")
     print("2. Listar clientes")
     print("3. Excluir cliente")
-    print("4. Sair")
+    print("4. Atualizar cliente")
+    print("5. Sair")
     
-    opcao = input("\nEscolha uma opção (1-4): ")
+    opcao = input("\nEscolha uma opção (1-5): ")
     
     if opcao == '1':
         adicionar_cliente()
@@ -80,6 +138,8 @@ while True:
     elif opcao == '3':
         excluir_cliente()
     elif opcao == '4':
+        atualizar_cliente()
+    elif opcao == '5':
         break
     else:
         print("Opção inválida!")
