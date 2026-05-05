@@ -11,10 +11,12 @@ import time
 # pyautogui.hotkey -> combinação de teclas
 pyautogui.PAUSE = 0.3
 
-# abrir o navegador (chrome)
+# abrir o navegador (microsoft edge)
 pyautogui.press("win")
 pyautogui.write("microsoft edge")
 pyautogui.press("enter")
+
+
 
 # entrar no link 
 pyautogui.write("https://dlp.hashtagtreinamentos.com/python/intensivao/login")
@@ -68,4 +70,5 @@ for linha in tabela.index:
     # dar scroll de tudo pra cima
     pyautogui.scroll(5000)
     # Passo 5: Repetir o processo de cadastro até o fim
+
 
